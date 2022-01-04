@@ -1,25 +1,6 @@
 import request from 'supertest';
 import app from '../app';
 
-describe('POST /enroll/admin', () => {
-    describe('with all necessary body parameters', () => {
-        it('should respond with HTTP status code 200', async () => {
-            const response = await request(app).post('/identities/enroll/admin').send({
-                name: 'admin',
-                secret: 'adminpw',
-                organization: 'Org1',
-            });
-            expect(response.statusCode).toBe(200);
-        });
-    });
-    describe('with missing body parameters', () => {
-        it('should respond with HTTP status code 400', async () => {
-            const response = await request(app).post('/identities/enroll/admin').send();
-            expect(response.statusCode).toBe(400);
-        });
-    });
-});
-
 describe('POST /enroll', () => {
     describe('without registering the identity', () => {
         const name = `test-${new Date().getTime()}`;

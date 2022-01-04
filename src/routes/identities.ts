@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
-import enrollAdmin from '../fabric/enroll-admin';
 import enroll from '../fabric/enroll';
 import isValid from '../middleware/is-valid';
 import { logError, logInfo } from '../utils/logger';
@@ -27,30 +26,7 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 /**
- * Enroll an admin identity with the Fabric CA
- */
-router.post('/enroll/admin', [
-    body('name').isString().isLength({ min: 1 }),
-    body('secret').isString().isLength({ min: 1 }),
-    body('organization').isString().isLength({ min: 1 }),
-], isValid, async (req: Request, res: Response) => {
-    try {
-        logInfo('Enrolling admin identity...');
-        await enrollAdmin(
-            req.body.name,
-            req.body.secret,
-            req.body.organization,
-        );
-        logInfo(`Successfully enrolled '${req.body.name}' for '${req.body.organization}'`);
-        res.sendStatus(200);
-    } catch (err: unknown) {
-        logError('Could not enroll admin identity', err instanceof Error ? err : undefined);
-        res.sendStatus(500);
-    }
-});
-
-/**
- * Enroll a client identity with the Fabric CA
+ * Enroll an identity with the Fabric CA
  */
 router.post('/enroll', [
     body('name').isString().isLength({ min: 1 }),
@@ -58,7 +34,7 @@ router.post('/enroll', [
     body('organization').isString().isLength({ min: 1 }),
 ], isValid, async (req: Request, res: Response) => {
     try {
-        logInfo('Enrolling client identity...');
+        logInfo('Enrolling identity...');
         await enroll(
             req.body.name,
             req.body.secret,
@@ -67,7 +43,7 @@ router.post('/enroll', [
         logInfo(`Successfully enrolled '${req.body.name}' for '${req.body.organization}'`);
         res.sendStatus(200);
     } catch (err: unknown) {
-        logError('Could not enroll client identity', err instanceof Error ? err : undefined);
+        logError('Could not enroll identity', err instanceof Error ? err : undefined);
         res.sendStatus(500);
     }
 });

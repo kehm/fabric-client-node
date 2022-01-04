@@ -10,11 +10,12 @@ const { Gateway, Wallets } = fabricNetwork;
  * Invoke a blockchain transaction
  *
  * @param identityName Identity name
- * @param channel Chaincode name
+ * @param channel Channel name
  * @param chaincode Chaincode name
  * @param func Function name
  * @param transient Transient data (undefined if none)
  * @param args Function arguments
+ * @returns Invoke response
  */
 const invoke = async (
     identityName: string,

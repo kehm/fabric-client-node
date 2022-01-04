@@ -27,9 +27,6 @@ const enroll = async (
     const organizationProfile = connectionProfile.organizations[
         organization as keyof string
     ] as unknown as OrganizationProfile;
-    const wallet = await Wallets.newFileSystemWallet(env.FabricWalletPath);
-    const identity = await wallet.get(enrollmentID);
-    if (identity) throw new Error('Identity already exists in wallet');
     const caInfo = connectionProfile.certificateAuthorities[
         organizationProfile.certificateAuthorities[0] as keyof string
     ] as unknown as CA;
@@ -41,6 +38,9 @@ const enroll = async (
         },
         caInfo.caName,
     );
+    const wallet = await Wallets.newFileSystemWallet(env.FabricWalletPath);
+    const identity = await wallet.get(enrollmentID);
+    if (identity) throw new Error('Identity already exists in wallet');
     const enrollment = await ca.enroll({
         enrollmentID,
         enrollmentSecret,
