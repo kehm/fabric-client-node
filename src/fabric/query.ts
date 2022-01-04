@@ -10,10 +10,11 @@ const { Gateway, Wallets } = fabricNetwork;
  * Query the blockchain
  *
  * @param identityName Identity name
- * @param channel Chaincode name
+ * @param channel Channel name
  * @param chaincode Chaincode name
  * @param func Function name
  * @param args Function arguments
+ * @returns Query result
  */
 const query = async (
     identityName: string,
