@@ -1,19 +1,31 @@
 import request from 'supertest';
 import app from '../app';
 
-describe('POST /enroll', () => {
-    describe('without registering the identity', () => {
-        const name = `test-${new Date().getTime()}`;
-        it('should respond with HTTP status code 500', async () => {
+jest.mock('../fabric/enroll');
+jest.mock('../fabric/register');
+
+describe('POST /identities/enroll', () => {
+    describe('with all necessary body parameters', () => {
+        it('should respond with HTTP status code 200', async () => {
             const response = await request(app).post('/identities/enroll').send({
-                name,
+                name: 'test',
                 secret: 'testpw',
                 organization: 'Org1',
             });
-            expect(response.statusCode).toBe(500);
+            expect(response.statusCode).toBe(200);
         });
     });
-    describe('with missing body parameters', () => {
+    describe('with incorrect body parameters', () => {
+        it('should respond with HTTP status code 400', async () => {
+            const response = await request(app).post('/identities/enroll').send({
+                name: 123,
+                secret: 'testpw',
+                organization: 'Org1',
+            });
+            expect(response.statusCode).toBe(400);
+        });
+    });
+    describe('without necessary body parameters', () => {
         it('should respond with HTTP status code 400', async () => {
             const response = await request(app).post('/identities/enroll').send();
             expect(response.statusCode).toBe(400);
@@ -21,23 +33,11 @@ describe('POST /enroll', () => {
     });
 });
 
-describe('POST /register and POST /enroll', () => {
-    describe('register and enroll a client with all necessary body parameters', () => {
-        const name = `test-${new Date().getTime()}`;
+describe('POST /identities/register', () => {
+    describe('with all necessary body parameters', () => {
         it('should respond with HTTP status code 200', async () => {
             const response = await request(app).post('/identities/register').send({
-                name,
-                secret: 'testpw',
-                role: 'client',
-                organization: 'Org1',
-                affiliation: 'org1.department1',
-                registrar: 'admin',
-            });
-            expect(response.statusCode).toBe(200);
-        });
-        it('should respond with HTTP status code 200', async () => {
-            const response = await request(app).post('/identities/enroll').send({
-                name,
+                name: 'test',
                 secret: 'testpw',
                 role: 'client',
                 organization: 'Org1',
@@ -47,7 +47,20 @@ describe('POST /register and POST /enroll', () => {
             expect(response.statusCode).toBe(200);
         });
     });
-    describe('register with missing body parameters', () => {
+    describe('with incorrect body parameters', () => {
+        it('should respond with HTTP status code 400', async () => {
+            const response = await request(app).post('/identities/register').send({
+                name: 123,
+                secret: 'testpw',
+                role: 'client',
+                organization: 'Org1',
+                affiliation: 'org1.department1',
+                registrar: 'admin',
+            });
+            expect(response.statusCode).toBe(400);
+        });
+    });
+    describe('without necessary body parameters', () => {
         it('should respond with HTTP status code 400', async () => {
             const response = await request(app).post('/identities/register').send();
             expect(response.statusCode).toBe(400);
