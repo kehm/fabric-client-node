@@ -7,7 +7,7 @@
     "start": "node src/server",
     "dev": "ts-node-dev src/server",
     "build": "tsc -p tsconfig.json",
-    "test": "jest --silent",
+    "test": "jest --coverage --silent",
     "docker": "docker build -f Dockerfile -t fabric-client-node:latest ."
   },
   "repository": {

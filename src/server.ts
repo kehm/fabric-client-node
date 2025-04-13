@@ -1,7 +1,6 @@
-import './config/dotenv';
+import 'dotenv/config';
 import env from './types/env';
 import { logError, logInfo } from './utils/logger';
-import checkEnv from './config/check-env';
 import app from './app';
 
 /**
@@ -10,7 +9,6 @@ import app from './app';
 const run = async () => {
     try {
         logInfo('Starting server...');
-        checkEnv();
         app.listen(env.Port, () => logInfo(`Server started on port ${env.Port}`));
     } catch (err: unknown) {
         logError('Server startup failed', err instanceof Error ? err : undefined);
